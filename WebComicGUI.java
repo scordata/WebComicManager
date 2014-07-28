@@ -10,9 +10,9 @@ public class WebComicGUI {
         JFrame frame = new JFrame(netHandler.getComicName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        ImageIcon icon = new ImageIcon(netHandler.getComicImage());//xkcdImage);
+        ImageIcon icon = new ImageIcon(netHandler.getComicImage());
 
-        //Add the ubiquitous "Hello World" label.
+        //Add the label
         JLabel label = new JLabel(netHandler.getComicName());
         label.setIcon(icon);
         frame.getContentPane().add(label);
