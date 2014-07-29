@@ -90,6 +90,19 @@ public class NetHandler {
         prependURLString = pre;
     }
 
+    public NetHandler(LinkPod linkPod){
+
+        comicName = linkPod.comicName;
+        comicURL = linkPod.url;
+        comicPattern = Pattern.compile(linkPod.patternString);
+        regExGroupLocation = linkPod.group;
+
+        if (linkPod.prepend != null){
+            System.out.println(linkPod.comicName + " has prepend");
+            prependURLString = linkPod.prepend;
+        }
+    }
+
     /*
     * Code from Prof Goldberg
     * Used to fetch and interpret Web Server response

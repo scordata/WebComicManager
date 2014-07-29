@@ -15,6 +15,7 @@ public class LogInGui extends JFrame{
     JPasswordField passwordField = new JPasswordField(10);
     int wrongLogInTries = 0;
     boolean loggedIn = false;
+    String username = null;
 
 
 
@@ -54,6 +55,7 @@ public class LogInGui extends JFrame{
 
                 if(users.containsValue(uname) && pass.equals(users.get(pass))){
                     loggedIn = true;
+                    username = uname;
 
                 } else {
                     JOptionPane.showMessageDialog(null, "Wrong Password / Username");

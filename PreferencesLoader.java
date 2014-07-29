@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -18,6 +19,7 @@ public class PreferencesLoader {
             loadUsers();
             logIn();
             readPreferences();
+            buildLinkPod(0);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -25,10 +27,12 @@ public class PreferencesLoader {
 
     public static int[] loadPrefs(String user){
 
+
         int[] userPrefs = new int[4];
         int[] tmpPrefs = preferences.get(user);
 
         for (int i = 1; i < tmpPrefs.length; i++){
+            System.out.println(i);
             userPrefs[i-1] = tmpPrefs[i];
         }
 
@@ -56,6 +60,38 @@ public class PreferencesLoader {
 
     }
 
+    public static LinkPod buildLinkPod(int i) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("src/links.txt"));
+        int lineCount = 1;
+        String[] info = new String[5];
+        String next = reader.readLine();
+
+        while( (next != null) && (lineCount <= i) ) {
+
+            //System.out.println("i " + i);
+            //System.out.println("lincecount " + lineCount);
+            if (lineCount != i) {
+                next = reader.readLine();
+                lineCount++;
+                continue;
+            }
+            info = next.split("\\^");
+            //System.out.println("next " + next);
+            //System.out.println("length " + info.length);
+            for (int x = 0; x < info.length; x++){
+                System.out.println(x + " " + info[x]);
+            }
+            lineCount++;
+        }
+
+        if(info.length == 5){
+            return new LinkPod(info[0],new URL(info[1]), info[2],
+                                Integer.parseInt(info[3]), info[4]);
+        }
+
+        return new LinkPod(info[0],new URL(info[1]), info[2], Integer.parseInt(info[3]));
+    }
+
     public static void readPreferences() throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader("src/prefs.txt"));
 
@@ -77,9 +113,8 @@ public class PreferencesLoader {
             next = reader.readLine();
 
         }
-
-
     }
+
 
     public static boolean logIn(){
 
