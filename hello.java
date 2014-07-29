@@ -72,10 +72,17 @@ public class hello {
         anh.add(phdNetHandler);
         anh.add(abtNetHandler);
 
+        for(int i = 0; i < anh.size(); i++) {
+            anh.get(i).fetch();
+        }
+        StripGui.create(anh);
+
+        /*
         for(int i = 0; i < anh.size(); i++){
             anh.get(i).fetch();
             WebComicGUI.display(anh.get(i));
         }
+        */
 
 
 

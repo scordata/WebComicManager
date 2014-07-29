@@ -145,7 +145,7 @@ public class NetHandler {
                 line = reader.readLine();
             }
 
-            System.out.println(comicName + "MATCHED TO: " + comicArray.get(regExGroupLocation));
+            System.out.println(comicName + " MATCHED TO: " + comicArray.get(regExGroupLocation));
 
             URL comicImageUrl;
 

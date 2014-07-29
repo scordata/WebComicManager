@@ -10,7 +10,7 @@ import java.util.Scanner;
  */
 public class PreferencesLoader {
 
-    private static HashMap<String, String> users = new HashMap<String, String>();
+    public static HashMap<String, String> users = new HashMap<String, String>();
     private static HashMap<String, int[]> preferences = new HashMap<String, int[]>();
 
     public static void main(String[] args) throws IOException {
@@ -22,7 +22,6 @@ public class PreferencesLoader {
             e.printStackTrace();
         }
     }
-
 
     public static int[] loadPrefs(String user){
 
