@@ -1,8 +1,7 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.HashMap;
 
 /**
@@ -14,6 +13,8 @@ public class LogInGui extends JFrame{
     JPanel panel = new JPanel();
     JTextField textFieldUser = new JTextField(10);
     JPasswordField passwordField = new JPasswordField(10);
+    int wrongLogInTries = 0;
+    boolean loggedIn = false;
 
 
 
@@ -43,7 +44,7 @@ public class LogInGui extends JFrame{
         //login();
     }
 
-    public void login(final HashMap<String, String> users){
+    public boolean login(final HashMap<String, String> users){
 
         buttonLogIn.addActionListener(new ActionListener() {
             @Override
@@ -52,23 +53,22 @@ public class LogInGui extends JFrame{
                 String pass = passwordField.getText();
 
                 if(users.containsValue(uname) && pass.equals(users.get(pass))){
-                    hello hello = new hello();
-                    String[] n = null;
-                    try {
-                        hello.main(n);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                    loggedIn = true;
+
                 } else {
                     JOptionPane.showMessageDialog(null, "Wrong Password / Username");
                     textFieldUser.setText("");
                     passwordField.setText("");
                     textFieldUser.requestFocus();
+                    wrongLogInTries++;
+                    if(wrongLogInTries > 3){
+                        System.exit(-1);
+                    }
                 }
 
             }
         });
-
+        return loggedIn;
     }
 
 
