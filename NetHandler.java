@@ -90,6 +90,17 @@ public class NetHandler {
         prependURLString = pre;
     }
 
+    /*
+    * NetHandler Constructor with LinkPod
+    *
+    * The linkpod class is generally a wrapper for the types
+    * NetHandler needs. This was employed to abstract out a nasty
+    * code pattern present by hard-coding the RegEc and Url strings
+    * into the program. Now maintenance can be performed without
+    * re-compiling.
+    *
+     */
+
     public NetHandler(LinkPod linkPod){
 
         comicName = linkPod.comicName;
@@ -127,28 +138,39 @@ public class NetHandler {
     } // read
 
 
+    /*
+    * Fetch acts as the "magic" in the NetHandler
+    *
+    * Once built, the NetHandler connects the internet and makes a
+    * request for it's url. It then parses the response looking for matches
+    * for the supplied RegEx. From there, it saves the image found at the
+    * pre-defined group number.
+    *
+     */
+
     public void fetch(){
 
         System.out.println("fetching info for: " + comicName);
 
         try{
-
+            // Reader to read web response
             BufferedReader reader = read(comicURL.toString());
-            String line = reader.readLine();
+            String line = reader.readLine();                        //temp for while() loop
 
+            //collection for possible matches
             ArrayList<String> comicArray = new ArrayList<String>();
 
-            while(line != null){
-                Matcher comicMatcher = comicPattern.matcher(line);
-                if(comicMatcher.find()){
+            while(line != null){                                    //until we've hit the end
+                Matcher comicMatcher = comicPattern.matcher(line);  // build matches
+                if(comicMatcher.find()){                            // if we've found one,
                     //System.out.println("FOUND!!!!!!!!!!!!!");
                     //System.out.println(line);
-                    Pattern p = Pattern.compile("([^\"\']*)");
-                    Matcher m = p.matcher(line);
-                    int count = 0;
-                    while(m.find()) {
-                        String tmp = m.group();
-                        if(tmp != null) comicArray.add(tmp);
+                    Pattern p = Pattern.compile("([^\"\']*)");      // parse out erroneous html
+                    Matcher m = p.matcher(line);                    // and
+                    int count = 0;                                  // (count var for debug mode)
+                    while(m.find()) {                               //  match again
+                        String tmp = m.group();                     // (temp for while())
+                        if(tmp != null) comicArray.add(tmp);        // add our image to the collection
                         //System.out.println("HERE IT IS: " + count + "  " + tmp);
                         count++;
                     }
@@ -158,17 +180,20 @@ public class NetHandler {
                 line = reader.readLine();
             }
 
-            System.out.println(comicName + " MATCHED TO: " + comicArray.get(regExGroupLocation));
+            System.out.println(comicName + " MATCHED TO: "
+                    + comicArray.get(regExGroupLocation));
 
             URL comicImageUrl;
 
-            if(prependURLString == null){
-                comicImageUrl = new URL(comicArray.get(regExGroupLocation));
+            if(prependURLString == null){                           // once the group number is discovered
+                comicImageUrl = new URL(                            // we determine if it needs a prefix
+                        comicArray.get(regExGroupLocation));        // (for the image location)
             } else {
-                comicImageUrl = new URL(prependURLString + comicArray.get(regExGroupLocation));
+                comicImageUrl = new URL(prependURLString            // if so, add that prefix
+                        + comicArray.get(regExGroupLocation));
             }
 
-            comicImage = ImageIO.read(comicImageUrl);
+            comicImage = ImageIO.read(comicImageUrl);               // download and write image
 
 
         } catch (IOException e){

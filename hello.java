@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
+ *
+ * SCRATCH PAD CODE - PLEASE IGNORE
+ *
  * Created by adam on 7/18/14.
  *
  * ideas:

@@ -7,13 +7,23 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * Created by Adam on 7/27/2014.
+ * Created by Adam Najman on 7/27/2014.
+ *
+ * This is a helper class. There are some methods here that are
+ * not employed in the production code - they are mainly for debugging
+ * purposes. This loads user info such as names and passwords, and
+ * figures out how many comics they want to see.
+ *
  */
 public class PreferencesLoader {
 
     public static HashMap<String, String> users = new HashMap<String, String>();
     private static HashMap<String, int[]> preferences = new HashMap<String, int[]>();
 
+    /*
+    * TESTING MAIN - only launch without GUI integration
+    * NOT TO BE RUN UNLESS FROM THIS THREAD ONLY
+     */
     public static void main(String[] args) throws IOException {
         try {
             loadUsers();
@@ -25,55 +35,71 @@ public class PreferencesLoader {
         }
     }
 
+    /*
+    * Takes a user, loads their comic strip preferences
+     */
     public static int[] loadPrefs(String user){
 
+        int[] userPrefs = new int[4];                           // Max preferences = four
+        int[] tmpPrefs = preferences.get(user);                 // Temp for transfer
 
-        int[] userPrefs = new int[4];
-        int[] tmpPrefs = preferences.get(user);
-
-        for (int i = 1; i < tmpPrefs.length; i++){
+        for (int i = 1; i < tmpPrefs.length; i++){              // basically array.copy()
             System.out.println(i);
             userPrefs[i-1] = tmpPrefs[i];
         }
 
-        System.out.println("Preferences for " + user + " loaded");
+        System.out.println("Preferences for "                   // Debug Statement
+                + user + " loaded");
 
         return userPrefs;
 
     }
-    public static void loadUsers() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/users.txt"));
 
-        String next = reader.readLine();
+    /*
+    *   Load the users. This file SHOULD change after a
+    *   new user registers. This requires a re-launch of the
+    *   program
+     */
+    public static void loadUsers() throws IOException {
+        BufferedReader reader = new BufferedReader(             // load file
+                new FileReader("src/users.txt"));
+
+        String next = reader.readLine();                        // temp for while()
 
         while(next != null){
-            String[] userPass = next.split(":");
-            String user = userPass[0];
-            String pass = userPass[1];
+            String[] userPass = next.split(":");                // split on delimiter
+            String user = userPass[0];                          // username
+            String pass = userPass[1];                          // their password
 
-            users.put(user, pass);
+            users.put(user, pass);                              // add to hash
 
-            next = reader.readLine();
+            next = reader.readLine();                           // keep going
         }
 
         System.out.println("Users Loaded");
 
     }
 
+    /*
+    * This class is used to build linkpods, which are general
+    * PODs (plain old data). They are used in tandem with NetHandlers
+    * to ease their creation. Pattern abstraction
+     */
     public static LinkPod buildLinkPod(int i) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/links.txt"));
-        int lineCount = 1;
-        String[] info = new String[5];
-        String next = reader.readLine();
+        BufferedReader reader = new BufferedReader(                 // open file
+                new FileReader("src/links.txt"));
+        int lineCount = 1;                                          // counter for debugging
+        String[] info = new String[5];                              // max prefs
+        String next = reader.readLine();                            // for while()
 
         while( (next != null) && (lineCount <= i) ) {
 
             //System.out.println("i " + i);
             //System.out.println("lincecount " + lineCount);
-            if (lineCount != i) {
-                next = reader.readLine();
-                lineCount++;
-                continue;
+            if (lineCount != i) {                                   //line count makes
+                next = reader.readLine();                           // sure we dont read the
+                lineCount++;                                        // same info twice, due to
+                continue;                                           // changes in user prefs
             }
             info = next.split("\\^");
             //System.out.println("next " + next);
@@ -84,7 +110,7 @@ public class PreferencesLoader {
             lineCount++;
         }
 
-        if(info.length == 5){
+        if(info.length == 5){                                     // checks if we need a prefix version or not
             return new LinkPod(info[0],new URL(info[1]), info[2],
                                 Integer.parseInt(info[3]), info[4]);
         }
@@ -92,34 +118,42 @@ public class PreferencesLoader {
         return new LinkPod(info[0],new URL(info[1]), info[2], Integer.parseInt(info[3]));
     }
 
-    public static void readPreferences() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader("src/prefs.txt"));
 
-        String next = reader.readLine();
+    /*
+    * Reads users preferences from a file. Builds the hash accordingly.
+     */
+    public static void readPreferences() throws IOException {
+        BufferedReader reader = new BufferedReader(                     // open file
+                new FileReader("src/prefs.txt"));
+
+        String next = reader.readLine();                                //for while()
 
         while(next != null){
-            String[] prefs = next.split(":");
+            String[] prefs = next.split(":");                           //split on delimiter
 
             int[] comics = new int[5];
             String user = prefs[0];
 
 
-            for (int i = 1; i < prefs.length; i++){
+            for (int i = 1; i < prefs.length; i++){                     //load into memory
                 comics[i] = Integer.parseInt(prefs[i]);
             }
 
-            preferences.put(user, comics);
+            preferences.put(user, comics);                              // build hash
 
             next = reader.readLine();
 
         }
     }
 
-
+    /*
+    * DEBUGGING METHOD: use only without GUI. This is to
+    * check integrity of hashing algorithm only.
+     */
     public static boolean logIn(){
 
-        Scanner scan = new Scanner(System.in);
-        int wrongCount = 0;
+        Scanner scan = new Scanner(System.in);              // user input
+        int wrongCount = 0;                                 // wrong tries
 
         while(wrongCount <= 2) {
 
@@ -127,28 +161,28 @@ public class PreferencesLoader {
 
             String tempUser = scan.nextLine();
 
-            if (!users.containsKey(tempUser)) {
+            if (!users.containsKey(tempUser)) {             // if user doesn't exist, report error
                 System.out.println("No such user");
-                wrongCount++;
+                wrongCount++;                               // increase count
                 continue;
             }
 
-            System.out.println("Enter Password");
+            System.out.println("Enter Password");           // else
 
             String tempPass = scan.nextLine();
 
-            if(!users.get(tempUser).equals(tempPass)){
+            if(!users.get(tempUser).equals(tempPass)){      //if wrong password, increase count
                 System.out.println("Wrong Password");
                 wrongCount++;
                 continue;
             }
 
-            System.out.println("Welcome, " + tempUser);
+            System.out.println("Welcome, " + tempUser);     // else, let them in
             return true;
 
         }
 
-        System.out.println("Exceeded limit. Exiting...");
+        System.out.println("Exceeded limit. Exiting...");   // if we ever get three bad tries, we quit.
         return false;
 
     }

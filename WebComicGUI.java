@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-/**
+/** SCRATCH PAD CODE - PLEASE IGNORE
  * Created by Adam on 7/27/2014.
  */
 public class WebComicGUI {

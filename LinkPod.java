@@ -1,7 +1,13 @@
 import java.net.URL;
 
 /**
- * Created by Adam on 7/29/2014.
+ * Created by Adam Najman on 7/29/2014.
+ *
+ * This is solely a POD (plain old data)
+ * Used with NetHandlers. Only for simplifying parameter list
+ * in NetHandler constructor. Used to abstract url/regex construction
+ * patters.
+ *
  */
 public class LinkPod {
     public String comicName = null;

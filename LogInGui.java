@@ -6,7 +6,13 @@ import java.io.*;
 import java.util.HashMap;
 
 /**
- * Created by Adam on 7/28/2014.
+ * Created by Adam Najman on 7/28/2014.
+ *
+ * The Log in Gui. Here we present the user with a log in screen.
+ * If they don't have an account, they can register.
+ * If and do have an account, they will be presented with their comics.
+ * Else, they will be booted for too many wrong tries.
+ *
  */
 public class LogInGui extends JFrame{
 
@@ -26,6 +32,9 @@ public class LogInGui extends JFrame{
     }
 
 
+    /*
+    *General gui method. Define everything
+     */
     LogInGui(){
         super ("Please Log In");
         setSize(300, 200);
@@ -50,6 +59,12 @@ public class LogInGui extends JFrame{
         setVisible(true);
     }
 
+    /*
+    * Here we are taking a hash of the user names and corresponding passwords
+    *  Accept/reject depends on supplied combinations
+    *
+    *  Return boolean to main: true = logged in
+     */
     public boolean login(final HashMap<String, String> users){
 
         buttonLogIn.addActionListener(new ActionListener() {
@@ -63,13 +78,15 @@ public class LogInGui extends JFrame{
                     username = uname;
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Wrong Password / Username");
+                    JOptionPane.showMessageDialog(null,
+                            "Wrong Password / Username");
                     textFieldUser.setText("");
                     passwordField.setText("");
                     textFieldUser.requestFocus();
                     wrongLogInTries++;
                     if(wrongLogInTries > 3){
-                        JOptionPane.showMessageDialog(null, "Too many incorrect attempts. GoodBye");
+                        JOptionPane.showMessageDialog(null,                 // boot user if they cannot supply
+                                "Too many incorrect attempts. GoodBye");    // correct info
                         System.exit(-1);
                     }
                 }
@@ -77,7 +94,7 @@ public class LogInGui extends JFrame{
             }
         });
 
-        register.addActionListener(new ActionListener() {
+        register.addActionListener(new ActionListener() {                   // here we attempt to register a new user
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String uname = textFieldUser.getText();
@@ -86,20 +103,23 @@ public class LogInGui extends JFrame{
                 if (users.containsValue(uname)) userNameExists = true;
 
                 if(userNameExists){
-                    JOptionPane.showMessageDialog(null, "Username exists. Please try again");
+                    JOptionPane.showMessageDialog(null,                     // try again if username exists
+                            "Username exists. Please try again");
                     textFieldUser.setText("");
                     passwordField.setText("");
                     textFieldUser.requestFocus();
 
                 } else {
-                    System.out.println("out of try");
+                    //System.out.println("out of try");
                     try {
-                        //Open file in append mode by adding true to argument list
-                        BufferedWriter writer = new BufferedWriter(new FileWriter("src/users.txt", true));
+
+                        BufferedWriter writer = new BufferedWriter(        //Open file in append mode by adding
+                                new FileWriter("src/users.txt", true));    // true to argument list
                         writer.append("\n" + uname + ":" + pass);
                         writer.close();
-
-                        BufferedWriter prefs = new BufferedWriter(new FileWriter("src/prefs.txt", true));
+                                                                            //make them a new user and default
+                        BufferedWriter prefs = new BufferedWriter(          // assign them comics
+                                new FileWriter("src/prefs.txt", true));
                         prefs.append("\n" + uname + ":1:2:3:4");
                         prefs.close();
 
