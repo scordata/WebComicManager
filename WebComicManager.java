@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Adam Najman on 7/28/2014.
  *
  * The Main event! Web Comic Manager's main method is located here
- * This is the glue that ties all the other peices together and
+ * This is the glue that ties all the other pieces together and
  * will present you with the program.
  */
 public class WebComicManager {
