@@ -10,3 +10,8 @@ Final Project
         Just run:
             javac WebComicManager.java
             java WebComicManager
+
+    Required Files:
+        The required data files have been included in a folder called:
+            src
+        Just leave them there, the program will do the rest.
